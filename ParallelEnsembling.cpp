@@ -174,4 +174,4 @@ double** AllocDoubleMatrix(int n, int m)
 	}
 
 	return res;
-}
+} 
