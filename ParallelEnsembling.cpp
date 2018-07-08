@@ -102,8 +102,8 @@ void Set3AdditionalArrs(int* &Nconc, int** &Elem_Conc, int** &No_Corresp, int el
 	int maxNconc = MaxVal(Nconc, nodesNum);
 
 	std::memset((void*)Nconc, 0, nodesNum * sizeof(int));
-	Elem_Conc  = AllocIntMatrix(nodesNum, maxNconc);
-	No_Corresp = AllocIntMatrix(nodesNum, maxNconc);
+	Elem_Conc  = AllocMatrix<int>(nodesNum, maxNconc);
+	No_Corresp = AllocMatrix<int>(nodesNum, maxNconc);
 
 	for (int i = 0, p; i < elemsNum; i++)
 	{
@@ -152,26 +152,15 @@ int MaxVal(int* arr, int n)
 	return res;
 }
 
-int** AllocIntMatrix(int n, int m)
+template<class T>
+T** AllocMatrix(int n, int m)
 {
-	int** res = new int*[n];
+	T** res = new T*[n];
 	for (int i = 0; i < n; i++)
 	{
-		res[i] = new int[m];
-		std::memset((void*)res[i], 0, m * sizeof(int));
+		res[i] = new T[m];
+		memset((void*)res[i], 0, m * sizeof(T));
 	}
-
+	
 	return res;
 }
-
-double** AllocDoubleMatrix(int n, int m)
-{
-	double** res = new double*[n];
-	for (int i = 0; i < n; i++)
-	{
-		res[i] = new double[m];
-		std::memset((void*)res[i], 0, m * sizeof(double));
-	}
-
-	return res;
-} 
