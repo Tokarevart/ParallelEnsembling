@@ -39,15 +39,15 @@
 
 void ParallelEnsemble(double** glM, int** Np, double*** K, int elemsNum, int nodesNum)
 {
-    int*  Nconc;
+	int*  Nconc;
 	int** Elem_Conc;
 	int** No_Corresp;
-    //
-    // Вычисляем значения доп. массивов Nconc, Elem_Conc, No_Corresp.
-    Set3AdditionalArrs(Nconc, Elem_Conc, No_Corresp, elemsNum, Np,        nodesNum);
-    //
-    // Ансамблируем с использованием доп. массивов.
-    ParallelEnsemble  (glM,   Np,        K,          Nconc,    Elem_Conc, No_Corresp, nodesNum);
+	//
+	// Вычисляем значения доп. массивов Nconc, Elem_Conc, No_Corresp.
+	Set3AdditionalArrs(Nconc, Elem_Conc, No_Corresp, elemsNum, Np,        nodesNum);
+	//
+	// Ансамблируем с использованием доп. массивов.
+	ParallelEnsemble  (glM,   Np,        K,          Nconc,    Elem_Conc, No_Corresp, nodesNum);
 }
 
 void ParallelEnsemble(double** glM, int** Np, double*** K, int* Nconc, int** Elem_Conc, int** No_Corresp, int nodesNum)
@@ -72,8 +72,8 @@ void ParallelEnsemble(double** glM, int** Np, double*** K, int* Nconc, int** Ele
 				block[1] = &K[elem_glob_num][DIM * node_loc_num + 1][DIM * k];
 				block[2] = &K[elem_glob_num][DIM * node_loc_num + 2][DIM * k];
                 
-                //
-                // Проверка не заполнен ли блок нулями.
+				//
+				// Проверка не заполнен ли блок нулями.
 				if (!IsZero3x3(block))
 				{
 					jj = DIM * Np[elem_glob_num][k];
@@ -82,7 +82,7 @@ void ParallelEnsemble(double** glM, int** Np, double*** K, int* Nconc, int** Ele
 				}
 			}
 		}
-    }
+	}
 }
 
 void Set3AdditionalArrs(int* &Nconc, int** &Elem_Conc, int** &No_Corresp, int elemsNum, int** Np, int nodesNum)
