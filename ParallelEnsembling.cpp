@@ -48,6 +48,15 @@ void ParallelEnsemble(double** glM, int** Np, double*** K, int elemsNum, int nod
 	//
 	// Ансамблируем с использованием доп. массивов.
 	ParallelEnsemble  (glM,   Np,        K,          Nconc,    Elem_Conc, No_Corresp, nodesNum);
+
+	delete[] Nconc;
+	for (int i = 0; i < nodesNum; i++)
+	{
+		delete[] Elem_Conc [i];
+		delete[] No_Corresp[i];
+	}
+	delete[] Elem_Conc;
+	delete[] No_Corresp;
 }
 
 void ParallelEnsemble(double** glM, int** Np, double*** K, int* Nconc, int** Elem_Conc, int** No_Corresp, int nodesNum)
