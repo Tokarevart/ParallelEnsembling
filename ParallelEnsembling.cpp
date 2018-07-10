@@ -1,14 +1,11 @@
 #include <algorithm>
 #include <cstring>
 
-//
 // Размерность пр-ва
 #define DIM 3
-//
 // Кол-во узлов элемента.
 #define Npt 4
 
-//
 // glM[i][j] - глобальная матрица жёсткости.
 //     i     - строка, 
 //        j  - столбец.
@@ -37,17 +34,17 @@
 //            i     - глобальный номер узла,
 //               j  - локальный номер элемента.
 
-void ParallelEnsemble(double** glM, int** Np, double*** K, int elemsNum, int nodesNum)
+template<class T>
+void ParallelEnsemble(T** glM, int** Np, T*** K, int elemsNum, int nodesNum)
 {
 	int*  Nconc;
 	int** Elem_Conc;
 	int** No_Corresp;
-	//
+	
 	// Вычисляем значения доп. массивов Nconc, Elem_Conc, No_Corresp.
-	Set3AdditionalArrs(Nconc, Elem_Conc, No_Corresp, elemsNum, Np,        nodesNum);
-	//
+	Set3AdditionalArrs (Nconc, Elem_Conc, No_Corresp, elemsNum, Np,        nodesNum);
 	// Ансамблируем с использованием доп. массивов.
-	ParallelEnsemble  (glM,   Np,        K,          Nconc,    Elem_Conc, No_Corresp, nodesNum);
+	ParallelEnsemble<T>(glM,   Np,        K,          Nconc,    Elem_Conc, No_Corresp, nodesNum);
 
 	delete[] Nconc;
 	for (int i = 0; i < nodesNum; i++)
@@ -59,12 +56,13 @@ void ParallelEnsemble(double** glM, int** Np, double*** K, int elemsNum, int nod
 	delete[] No_Corresp;
 }
 
-void ParallelEnsemble(double** glM, int** Np, double*** K, int* Nconc, int** Elem_Conc, int** No_Corresp, int nodesNum)
+template<class T>
+void ParallelEnsemble(T** glM, int** Np, T*** K, int* Nconc, int** Elem_Conc, int** No_Corresp, int nodesNum)
 {
-	int     node_loc_num;
-	int     elem_glob_num;
-	int     ii, jj;
-	double* block[3];
+	int node_loc_num;
+	int elem_glob_num;
+	int ii, jj;
+	T*  block[3];
 
 	#pragma omp parallel for private(node_loc_num, elem_glob_num, ii, jj, block)
 	for (int i = 0; i < nodesNum; i++)
@@ -83,11 +81,11 @@ void ParallelEnsemble(double** glM, int** Np, double*** K, int* Nconc, int** Ele
                 
 				//
 				// Проверка не заполнен ли блок нулями.
-				if (!IsZero3x3(block))
+				if (!IsZero3x3<T>(block))
 				{
 					jj = DIM * Np[elem_glob_num][k];
 
-					Add3x3(glM, ii, jj, block);
+					Add3x3<T>(glM, ii, jj, block);
 				}
 			}
 		}
@@ -127,7 +125,8 @@ void Set3AdditionalArrs(int* &Nconc, int** &Elem_Conc, int** &No_Corresp, int el
 	}
 }
 
-bool IsZero3x3(double* block[3])
+template<class T>
+bool IsZero3x3(T* block[3])
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -143,7 +142,8 @@ bool IsZero3x3(double* block[3])
 	return true;
 }
 
-void Add3x3(double** glM, int ii, int jj, double* block[3])
+template<class T>
+void Add3x3(T** glM, int ii, int jj, T* block[3])
 {
 	glM[ii    ][jj] += block[0][0]; glM[ii    ][jj + 1] += block[0][1]; glM[ii    ][jj + 2] += block[0][2];
 	glM[ii + 1][jj] += block[1][0]; glM[ii + 1][jj + 1] += block[1][1]; glM[ii + 1][jj + 2] += block[1][2];
@@ -168,7 +168,7 @@ T** AllocMatrix(int n, int m)
 	for (int i = 0; i < n; i++)
 	{
 		res[i] = new T[m];
-		memset((void*)res[i], 0, m * sizeof(T));
+		std::memset((void*)res[i], 0, m * sizeof(T));
 	}
 	
 	return res;
