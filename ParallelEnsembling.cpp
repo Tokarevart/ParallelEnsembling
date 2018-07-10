@@ -104,8 +104,8 @@ void Set3AdditionalArrs(int* &Nconc, int** &Elem_Conc, int** &No_Corresp, int el
 			Nconc[Np[i][j]]++;
 		}
 	}
-	//
-	// Стандартные std::max() и std::max_element() работают не правильно с массивом, либо я чего то не понимаю.
+	
+	// Стандартные std::max() и std::max_element() работают с обычным массивом не правильно, либо я чего то не понимаю.
 	int maxNconc = MaxVal(Nconc, nodesNum);
 
 	std::memset((void*)Nconc, 0, nodesNum * sizeof(int));
