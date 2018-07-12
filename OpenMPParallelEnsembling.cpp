@@ -79,7 +79,6 @@ void ParallelEnsemble(T** glM, int** Np, T*** K, int* Nconc, int** Elem_Conc, in
 				block[1] = &K[elem_glob_num][DIM * node_loc_num + 1][DIM * k];
 				block[2] = &K[elem_glob_num][DIM * node_loc_num + 2][DIM * k];
                 
-				//
 				// Проверка не заполнен ли блок нулями.
 				if (!IsZero3x3<T>(block))
 				{
@@ -104,7 +103,6 @@ void Set3AdditionalArrs(int* &Nconc, int** &Elem_Conc, int** &No_Corresp, int el
 			Nconc[Np[i][j]]++;
 		}
 	}
-	
 	// Стандартные std::max() и std::max_element() работают с обычным массивом не правильно, либо я чего то не понимаю.
 	int maxNconc = MaxVal(Nconc, nodesNum);
 
@@ -132,7 +130,7 @@ bool IsZero3x3(T* block[3])
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			if ((block[i][j] < -10e-6 || block[i][j] > 10e-6))
+			if ((block[i][j] < -1e-5 || block[i][j] > 1e-5))
 			{
 				return false;
 			}
