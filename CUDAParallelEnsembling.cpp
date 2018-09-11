@@ -57,7 +57,7 @@ void ParallelEnsemble(T* glM, size_t* Np, T* K, size_t* Nconc, size_t* Elem_Conc
 	size_t node_loc_num;
 	size_t elem_glob_num;
 	size_t ii, jj;
-	T*  block[DIM];
+	T* block[DIM];
 	__shared__ T sharedBlockArr[BLOCK_SIZE][DIM][DIM];
 	T* sharedBlock = (T*)sharedBlockArr[threadIdx.x];
 
