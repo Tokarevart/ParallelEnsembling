@@ -79,13 +79,8 @@ void ParallelEnsemble(T** glM, int** Np, T*** K, int* Nconc, int** Elem_Conc, in
 				block[1] = &K[elem_glob_num][DIM * node_loc_num + 1][DIM * k];
 				block[2] = &K[elem_glob_num][DIM * node_loc_num + 2][DIM * k];
                 
-				// Проверка не заполнен ли блок нулями.
-				if (!IsZero3x3<T>(block))
-				{
-					jj = DIM * Np[elem_glob_num][k];
-
-					Add3x3<T>(glM, ii, jj, block);
-				}
+				jj = DIM * Np[elem_glob_num][k];
+				Add3x3<T>(glM, ii, jj, block);
 			}
 		}
 	}
@@ -121,23 +116,6 @@ void Set3AdditionalArrs(int* &Nconc, int** &Elem_Conc, int** &No_Corresp, int el
 			Nconc[p]++;
 		}
 	}
-}
-
-template<class T>
-bool IsZero3x3(T* block[3])
-{
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if ((block[i][j] < -1e-5 || block[i][j] > 1e-5))
-			{
-				return false;
-			}
-		}
-	}
-
-	return true;
 }
 
 template<class T>

@@ -80,39 +80,11 @@ void ParallelEnsemble(T* glM, size_t* Np, T* K, size_t* Nconc, size_t* Elem_Conc
 				sharedBlock[    DIM    ] = block[1][0]; sharedBlock[    DIM + 1] = block[1][1]; sharedBlock[    DIM + 2] = block[1][2];
 				sharedBlock[2 * DIM    ] = block[2][0]; sharedBlock[2 * DIM + 1] = block[2][1]; sharedBlock[2 * DIM + 2] = block[2][2];
 
-				// Проверка не заполнен ли блок нулями.
-				if (!IsZero3x3<T>(sharedBlock))
-				{
-					jj = DIM * Np[elem_glob_num * Npt + k];
-
-					Add3x3<T>(glM, nodesNum, ii, jj, sharedBlock);
-				}
+				jj = DIM * Np[elem_glob_num * Npt + k];
+				Add3x3<T>(glM, nodesNum, ii, jj, sharedBlock);
 			}
 		}
 	}
-}
-
-template<class T>
-__device__
-bool IsZero3x3(T* block)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		if ((block[i * DIM    ] < -1e-5 || block[i * DIM    ] > 1e-5))
-		{
-			return false;
-		}
-		if ((block[i * DIM + 1] < -1e-5 || block[i * DIM + 1] > 1e-5))
-		{
-			return false;
-		}
-		if ((block[i * DIM + 2] < -1e-5 || block[i * DIM + 2] > 1e-5))
-		{
-			return false;
-		}
-	}
-
-	return true;
 }
 
 template<class T>
